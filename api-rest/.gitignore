@@ -1,0 +1,56 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# Archivos de sistema adicionales
+*.log            # Excluye archivos de log generales
+*.swp            # Archivos de intercambio de Vim
+*.swo
+*~
+
+# Archivos de configuración local y dependencias de entorno
+.env             # Archivos de entorno
+*.env.*          # Variantes de archivos de entorno (por ejemplo, .env.local)
+
+# Archivos temporales de instalación o descarga
+node_modules/    # Si estás usando Node.js para algo adicional en el proyecto
+*.bak            # Archivos de respaldo comunes
+*.tmp            # Archivos temporales comunes
+
+# Archivos específicos de Maven
+.mvn/            # Oculta toda la carpeta .mvn si contiene configuraciones temporales
+*.mvn            # Archivos temporales de Maven adicionales, si es el caso
+
+# Archivos y carpetas de documentación generada
+doc/
+docs/
