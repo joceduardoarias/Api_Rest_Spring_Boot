@@ -3,12 +3,14 @@ package com.jeam.api_rest.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jeam.api_rest.model.entity.Cliente;
 import com.jeam.api_rest.model.entity.dao.ClienteDao;
 import com.jeam.api_rest.service.ICliente;
 
+@Service // Indicamos que es un servicio
 public class ClienteImpl implements ICliente {
 	
 	// Inyectamos el ClienteDao para poder usar sus métodos
