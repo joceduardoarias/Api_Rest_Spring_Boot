@@ -7,10 +7,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.ToString;
+import lombok.*;
 
 
+@Data
+@AllArgsConstructor
 @ToString
+@Builder // Usamos el patrón builder para crear objetos de esta clase.
 @Entity
 @Table(name = "clientes")
 public class Cliente implements Serializable {

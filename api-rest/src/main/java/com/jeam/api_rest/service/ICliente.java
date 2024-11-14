@@ -3,6 +3,7 @@ package com.jeam.api_rest.service;
 import java.util.List;
 
 import com.jeam.api_rest.model.entity.Cliente;
+import com.jeam.api_rest.model.entity.dto.ClienteDto;
 
 public interface ICliente {
 	
@@ -10,7 +11,7 @@ public interface ICliente {
 
 	public Cliente findById(Long id);
 
-	public Cliente save(Cliente cliente);
+	public Cliente save(ClienteDto cliente);
 
 	public void delete(Long id);
 }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jeam.api_rest.model.entity.Cliente;
+import com.jeam.api_rest.model.entity.dto.ClienteDto;
 import com.jeam.api_rest.service.ICliente;
 
 @RestController // Define l clase como un controlador REST
@@ -29,11 +30,19 @@ public class ClientController {
 	private ICliente clientService;
 	
 	@PostMapping("/cliente")	
-	public ResponseEntity<?> createClient(@RequestBody Cliente client) {
+	public ResponseEntity<?> createClient(@RequestBody ClienteDto clientDto) {
 		Map<String, Object> response = new HashMap<>();
-		
+		 System.out.println("clientDto" + clientDto);
 		try {
-			return new ResponseEntity<>(clientService.save(client), HttpStatus.CREATED);
+			Cliente cliente = clientService.save(clientDto);
+			ClienteDto clienteDto = ClienteDto.builder()
+					.idCliente(cliente.getIdCliente())
+					.nombre(cliente.getNombre())
+					.apellido(cliente.getApellido())
+					.correo(cliente.getCorreo())
+					.fechaRegistro(cliente.getFechaRegistro())
+					.build();
+			return new ResponseEntity<>(clienteDto, HttpStatus.CREATED);
 		} catch (DataAccessException ex) {
 			response.put("mensaje", "Error al realizar la inserción en la base de datos");
 			response.put("error", ex.getMessage().concat(": ").concat(ex.getMostSpecificCause().getMessage()));
@@ -74,17 +83,17 @@ public class ClientController {
 	}
 	
 	@PutMapping("/cliente")
-	public ResponseEntity<?> updateClient(@RequestBody Cliente cliente) {		
+	public ResponseEntity<?> updateClient(@RequestBody ClienteDto clienteDto) {		
 		Map<String, Object> response = new HashMap<>();
 		try {
-			Cliente clienteOld = clientService.findById(cliente.getIdCliente());
+			Cliente clienteOld = clientService.findById(clienteDto.getIdCliente());
 			if (clienteOld == null) {
 				response.put("mensaje", "El cliente con el id "
-						.concat(cliente.getIdCliente().toString().concat(" no existe en la base de datos")));
+						.concat(clienteDto.getIdCliente().toString().concat(" no existe en la base de datos")));
 				return null;
 			}
 			
-			clientService.save(cliente);
+			clientService.save(clienteDto);
 			
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (DataAccessException ex) {

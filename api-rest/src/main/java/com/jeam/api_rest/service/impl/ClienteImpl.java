@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jeam.api_rest.model.entity.Cliente;
 import com.jeam.api_rest.model.entity.dao.ClienteDao;
+import com.jeam.api_rest.model.entity.dto.ClienteDto;
 import com.jeam.api_rest.service.ICliente;
 
 @Service // Indicamos que es un servicio
@@ -32,7 +33,14 @@ public class ClienteImpl implements ICliente {
 	}
 
 	@Override
-	public Cliente save(Cliente cliente) {
+	public Cliente save(ClienteDto clienteDto) {
+		Cliente cliente = Cliente.builder()
+				.idCliente(clienteDto.getIdCliente())
+				.nombre(clienteDto.getNombre())
+				.apellido(clienteDto.getApellido())
+				.correo(clienteDto.getCorreo())
+				.fechaRegistro(clienteDto.getFechaRegistro())
+				.build();
 		return clienteDao.save(cliente);
 	}
 	
