@@ -54,13 +54,13 @@ public class ClientController {
 					.mensaje(ex.getMessage())
 					.data(null)
 					.build()
-					, HttpStatus.INTERNAL_SERVER_ERROR);
+					, HttpStatus.METHOD_NOT_ALLOWED);
 		}
 			
 	}
 	
 	@GetMapping("/cliente")	
-	public ResponseEntity<?> getClients() {			
+	public ResponseEntity<?> getClientes() {			
 		try {
 			return new ResponseEntity<>(clientService.findAll(), HttpStatus.OK);
 		} catch (DataAccessException ex) {
@@ -81,7 +81,7 @@ public class ClientController {
                 return new ResponseEntity<>(MensajeResponse.builder()
                 		.mensaje("El cliente con el id ".concat(id.toString().concat(" no existe en la base de datos")))
                 		.data(null)
-                		.build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                		.build(), HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(cliente,HttpStatus.OK);
         } catch (DataAccessException ex) {
@@ -114,7 +114,7 @@ public class ClientController {
 					.mensaje(ex.getMessage())
 					.data(null)
 					.build(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+					HttpStatus.METHOD_NOT_ALLOWED);
 		}		
 	}
 	
@@ -126,7 +126,7 @@ public class ClientController {
 				 return new ResponseEntity<>(MensajeResponse.builder()
 	                		.mensaje("El cliente con el id ".concat(id.toString().concat(" no existe en la base de datos")))
 	                		.data(null)
-	                		.build(), HttpStatus.INTERNAL_SERVER_ERROR);
+	                		.build(), HttpStatus.NOT_FOUND);
 			}
 			
             clientService.delete(id);
@@ -137,7 +137,7 @@ public class ClientController {
 					.mensaje(ex.getMessage())
 					.data(null)
 					.build(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+					HttpStatus.METHOD_NOT_ALLOWED);
         }            
 	} 
 }
