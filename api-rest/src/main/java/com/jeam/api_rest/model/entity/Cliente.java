@@ -33,11 +33,11 @@ public class Cliente implements Serializable {
 	public Cliente() {
 	}
 
-	public Cliente(Long id, String nombre, String apellido, String email) {
+	public Cliente(Long id, String nombre, String apellido, String correo) {
 		this.idCliente = id;
 		this.nombre = nombre;
 		this.apellido = apellido;
-		this.correo = email;
+		this.correo = correo;
 	}
 
 	public Long getIdCliente() {
@@ -64,12 +64,12 @@ public class Cliente implements Serializable {
 		this.apellido = apellido;
 	}
 
-	public String getEmail() {
+	public String getCorreo() {
 		return correo;
 	}
 
-	public void setEmail(String email) {
-		this.correo = email;
+	public void setEmail(String correo) {
+		this.correo = correo;
 	}
 
 	public Date getFechaRegistro() {
