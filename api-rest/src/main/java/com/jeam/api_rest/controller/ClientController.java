@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jeam.api_rest.model.entity.Cliente;
 import com.jeam.api_rest.model.entity.dto.ClienteDto;
+import com.jeam.api_rest.model.entity.payload.MensajeResponse;
 import com.jeam.api_rest.service.ICliente;
 
 @RestController // Define l clase como un controlador REST
@@ -30,10 +31,9 @@ public class ClientController {
 	private ICliente clientService;
 	
 	@PostMapping("/cliente")	
-	public ResponseEntity<?> createClient(@RequestBody ClienteDto clientDto) {
-		Map<String, Object> response = new HashMap<>();
-		 System.out.println("clientDto" + clientDto);
+	public ResponseEntity<?> createClient(@RequestBody ClienteDto clientDto) {				 
 		try {
+			
 			Cliente cliente = clientService.save(clientDto);
 			ClienteDto clienteDto = ClienteDto.builder()
 					.idCliente(cliente.getIdCliente())
@@ -42,43 +42,55 @@ public class ClientController {
 					.correo(cliente.getCorreo())
 					.fechaRegistro(cliente.getFechaRegistro())
 					.build();
-			return new ResponseEntity<>(clienteDto, HttpStatus.CREATED);
+			
+			return new ResponseEntity<>(MensajeResponse.builder()
+					.mensaje("Guardado correctamente")
+					.data(clientDto)
+					.build(), HttpStatus.CREATED);
+			
 		} catch (DataAccessException ex) {
-			response.put("mensaje", "Error al realizar la inserción en la base de datos");
-			response.put("error", ex.getMessage().concat(": ").concat(ex.getMostSpecificCause().getMessage()));
-			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			
+			return new ResponseEntity<>(MensajeResponse.builder()
+					.mensaje(ex.getMessage())
+					.data(null)
+					.build()
+					, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 			
 	}
 	
 	@GetMapping("/cliente")	
-	public ResponseEntity<?> getClients() {
-		Map<String, Object> response = new HashMap<>();
-		
+	public ResponseEntity<?> getClients() {			
 		try {
 			return new ResponseEntity<>(clientService.findAll(), HttpStatus.OK);
 		} catch (DataAccessException ex) {
-			response.put("mensaje", "Error al realizar la consulta en la base de datos");
-			response.put("error", ex.getMessage().concat(": ").concat(ex.getMostSpecificCause().getMessage()));
-			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(MensajeResponse.builder()
+					.mensaje(ex.getMessage())
+					.data(null)
+					.build()
+					, HttpStatus.INTERNAL_SERVER_ERROR);
 		}				
 	}
 	
 	@GetMapping("/cliente/{id}")	
 	public ResponseEntity<?> getClient(@PathVariable Long id) {
-		Map<String, Object> response = new HashMap<>();
-		
+				
 		try {
             Cliente cliente = clientService.findById(id);
-            if (cliente == null) {
-                response.put("mensaje", "El cliente con el id ".concat(id.toString().concat(" no existe en la base de datos")));
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            if (cliente == null) {                
+                return new ResponseEntity<>(MensajeResponse.builder()
+                		.mensaje("El cliente con el id ".concat(id.toString().concat(" no existe en la base de datos")))
+                		.data(null)
+                		.build(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
             return new ResponseEntity<>(cliente,HttpStatus.OK);
         } catch (DataAccessException ex) {
-            response.put("mensaje", "Error al realizar la consulta en la base de datos");
-            response.put("error", ex.getMessage().concat(": ").concat(ex.getMostSpecificCause().getMessage()));
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        	            
+			return new ResponseEntity<>(MensajeResponse.builder()
+					.mensaje(ex.getMessage())
+					.data(null)
+					.build(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
         }				
 	}
 	
@@ -87,40 +99,45 @@ public class ClientController {
 		Map<String, Object> response = new HashMap<>();
 		try {
 			Cliente clienteOld = clientService.findById(clienteDto.getIdCliente());
-			if (clienteOld == null) {
-				response.put("mensaje", "El cliente con el id "
-						.concat(clienteDto.getIdCliente().toString().concat(" no existe en la base de datos")));
-				return null;
+			if (clienteOld == null) {				
+				return new ResponseEntity<>(MensajeResponse.builder()
+                		.mensaje("El cliente con el id ".concat(clienteDto.getIdCliente().toString().concat(" no existe en la base de datos")))
+                		.data(null)
+                		.build(), HttpStatus.INTERNAL_SERVER_ERROR);				
 			}
 			
 			clientService.save(clienteDto);
 			
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (DataAccessException ex) {
-			response.put("mensaje", "Error al actualizar el cliente en la base de datos");
-			response.put("error", ex.getMessage().concat(": ").concat(ex.getMostSpecificCause().getMessage()));
-			return null;
+			return new ResponseEntity<>(MensajeResponse.builder()
+					.mensaje(ex.getMessage())
+					.data(null)
+					.build(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}		
 	}
 	
 	@DeleteMapping("/cliente/{id}")	
-	public ResponseEntity<?> deleteClient(@PathVariable Long id) {
-		Map<String, Object> response = new HashMap<>();
+	public ResponseEntity<?> deleteClient(@PathVariable Long id) {		
 		try {
 			Cliente  cliente = clientService.findById(id);	
 			if (cliente == null) {
-				response.put("mensaje",
-						"El cliente con el id ".concat(id.toString().concat(" no existe en la base de datos")));
-				return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+				 return new ResponseEntity<>(MensajeResponse.builder()
+	                		.mensaje("El cliente con el id ".concat(id.toString().concat(" no existe en la base de datos")))
+	                		.data(null)
+	                		.build(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			
             clientService.delete(id);
             
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (DataAccessException ex) {
-        	response.put("mensaje", "Error al eliminar el cliente en la base de datos");
-            response.put("error", ex.getMessage().concat(": ").concat(ex.getMostSpecificCause().getMessage()));
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        	return new ResponseEntity<>(MensajeResponse.builder()
+					.mensaje(ex.getMessage())
+					.data(null)
+					.build(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
         }            
 	} 
 }
