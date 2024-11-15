@@ -2,6 +2,7 @@ package com.jeam.api_rest.controller;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,11 @@ public class ClientController {
 	@GetMapping("/cliente")	
 	public ResponseEntity<?> getClients() {			
 		try {
-			return new ResponseEntity<>(clientService.findAll(), HttpStatus.OK);
+			List<Cliente> clientes = clientService.findAll();
+			return new ResponseEntity<>(MensajeResponse.builder()
+					.mensaje(null)
+					.data(clientes)
+					.build(), HttpStatus.OK);
 		} catch (DataAccessException ex) {
 			return new ResponseEntity<>(MensajeResponse.builder()
 					.mensaje(ex.getMessage())
