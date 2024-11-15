@@ -60,7 +60,7 @@ public class ClientController {
 	}
 	
 	@GetMapping("/cliente")	
-	public ResponseEntity<?> getClientes() {			
+	public ResponseEntity<?> getClients() {			
 		try {
 			return new ResponseEntity<>(clientService.findAll(), HttpStatus.OK);
 		} catch (DataAccessException ex) {
@@ -94,18 +94,17 @@ public class ClientController {
         }				
 	}
 	
-	@PutMapping("/cliente")
-	public ResponseEntity<?> updateClient(@RequestBody ClienteDto clienteDto) {		
-		Map<String, Object> response = new HashMap<>();
+	@PutMapping("/cliente/{id}")
+	public ResponseEntity<?> updateClient(@RequestBody ClienteDto clienteDto, @PathVariable Long id) {				
 		try {
-			Cliente clienteOld = clientService.findById(clienteDto.getIdCliente());
+			Cliente clienteOld = clientService.findById(id);
 			if (clienteOld == null) {				
 				return new ResponseEntity<>(MensajeResponse.builder()
-                		.mensaje("El cliente con el id ".concat(clienteDto.getIdCliente().toString().concat(" no existe en la base de datos")))
+                		.mensaje("El cliente con el id ".concat(id.toString().concat(" no existe en la base de datos")))
                 		.data(null)
-                		.build(), HttpStatus.INTERNAL_SERVER_ERROR);				
+                		.build(), HttpStatus.METHOD_NOT_ALLOWED);				
 			}
-			
+			clienteDto.setIdCliente(id);
 			clientService.save(clienteDto);
 			
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
