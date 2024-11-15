@@ -83,7 +83,15 @@ public class ClientController {
                 		.data(null)
                 		.build(), HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(cliente,HttpStatus.OK);
+            
+            ClienteDto clienteDto = ClienteDto.builder()
+					.idCliente(cliente.getIdCliente())
+					.nombre(cliente.getNombre())
+					.apellido(cliente.getApellido())
+					.correo(cliente.getCorreo())
+					.fechaRegistro(cliente.getFechaRegistro())
+					.build();
+            return new ResponseEntity<>(clienteDto,HttpStatus.OK);
         } catch (DataAccessException ex) {
         	            
 			return new ResponseEntity<>(MensajeResponse.builder()
